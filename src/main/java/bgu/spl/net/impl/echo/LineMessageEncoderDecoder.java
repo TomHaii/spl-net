@@ -30,8 +30,7 @@ public class LineMessageEncoderDecoder implements MessageEncoderDecoder<String> 
         if (len >= bytes.length) {
             bytes = Arrays.copyOf(bytes, len * 2);
         }
-
-        bytes[len++] = nextByte;
+        bytes[len++]=nextByte;
     }
 
     private String popString() {
