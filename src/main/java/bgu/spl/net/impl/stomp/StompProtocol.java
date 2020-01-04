@@ -4,7 +4,7 @@ import bgu.spl.net.api.StompMessagingProtocol;
 import bgu.spl.net.srv.Connections;
 
 public class StompProtocol implements StompMessagingProtocol {
-
+    private boolean terminate = false;
 
     @Override
     public void start(int connectionId, Connections<String> connections) {
@@ -18,6 +18,6 @@ public class StompProtocol implements StompMessagingProtocol {
 
     @Override
     public boolean shouldTerminate() {
-        return false;
+        return terminate;
     }
 }
