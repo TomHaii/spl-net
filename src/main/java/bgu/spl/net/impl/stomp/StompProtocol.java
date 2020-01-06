@@ -23,6 +23,7 @@ public class StompProtocol implements StompMessagingProtocol {
         topics = new LinkedList<>();
     }
 
+
     @Override
     public void process(Frame message) {
         if (message instanceof ConnectFrame) {
