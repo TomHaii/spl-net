@@ -1,25 +1,31 @@
 package bgu.spl.net.impl.stomp;
 import bgu.spl.net.srv.ConnectionHandler;
 import bgu.spl.net.srv.Connections;
+import javafx.util.Pair;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ConnectionsImp<T> implements Connections<T> {
 
     private HashMap<Integer, ConnectionHandler<T>> connectionHandlerConcurrentHashMap;
 
     private HashMap<String, String> users;
-    private HashMap<String, Boolean> loggedUsers;
-    private HashMap<String, LinkedList<String>> topicList;
-
+    private ConcurrentHashMap<Integer, String> userIds;
+    private ConcurrentHashMap<String, Boolean> loggedUsers;
+    private ConcurrentHashMap<String, LinkedList<Pair<Integer, Integer>>> topicList;
+    private AtomicInteger connectionId = new AtomicInteger(0);
 
 
     public ConnectionsImp() {
         connectionHandlerConcurrentHashMap = new HashMap<>();;
-        topicList = new HashMap<>();
+        topicList = new ConcurrentHashMap<>();
         users = new HashMap<>();
-        loggedUsers = new HashMap<>();
+        loggedUsers = new ConcurrentHashMap<>();
+        userIds = new ConcurrentHashMap<>();
     }
 
 
@@ -42,9 +48,16 @@ public class ConnectionsImp<T> implements Connections<T> {
         return users;
     }
 
-    public HashMap<String, Boolean> getLoggedUsers() {
+    public ConcurrentHashMap<String, Boolean> getLoggedUsers() {
         return loggedUsers;
     }
 
 
+    public ConcurrentHashMap<String, LinkedList<Pair<Integer, Integer>>> getTopicList() {
+        return topicList;
+    }
+
+    public ConcurrentHashMap<Integer, String> getUserIds() {
+        return userIds;
+    }
 }

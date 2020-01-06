@@ -3,16 +3,16 @@ package bgu.spl.net.impl.stomp;
 import java.util.LinkedList;
 
 public class DisconnectFrame implements Frame {
-    private String receipt;
+    private int receipt;
 
     public DisconnectFrame(LinkedList<String> message) {
         for(String msg: message){
             if(msg.startsWith("receipt"))
-                receipt = msg.substring(7);
+                receipt = Integer.parseInt(msg.substring(7));
         }
     }
 
-    public String getReceipt() {
+    public int getReceipt() {
         return receipt;
     }
 

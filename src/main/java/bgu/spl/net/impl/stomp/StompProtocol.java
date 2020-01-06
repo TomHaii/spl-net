@@ -2,39 +2,53 @@ package bgu.spl.net.impl.stomp;
 
 import bgu.spl.net.api.StompMessagingProtocol;
 import bgu.spl.net.srv.Connections;
+import javafx.util.Pair;
 
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class StompProtocol implements StompMessagingProtocol {
     private boolean terminate;
     private int connectionId;
     private ConnectionsImp<Frame> connections;
-
+    private LinkedList<String> topics;
 
     @Override
     public void start(int connectionId, Connections<Frame> connections) {
         this.connectionId = connectionId;
         this.connections = (ConnectionsImp<Frame>) connections;
         this.terminate = false;
+        topics = new LinkedList<String>();
     }
 
     @Override
     public void process(Frame message) {
-        if(message instanceof ConnectFrame)
-        {
+        if (message instanceof ConnectFrame) {
             ConnectFrame connectFrame = (ConnectFrame) message;
             login(connectFrame.getLogin(), connectFrame.getPasscode(), connectFrame.getVersion());
-        }
-        if(message instanceof SubscribeFrame){
+        } else if (message instanceof SubscribeFrame) {
+            SubscribeFrame subscribeFrame = (SubscribeFrame) message;
+            topics.add(subscribeFrame.getDestination());
+            connections.getTopicList().putIfAbsent(subscribeFrame.getDestination(), new LinkedList<>());
+            connections.getTopicList().get(subscribeFrame.getDestination()).add(new Pair<Integer, Integer>(connectionId, subscribeFrame.getId()));
+            connections.send(connectionId, new ReceiptFrame(subscribeFrame.getReceipt()));
+        } else if (message instanceof DisconnectFrame) {
+            DisconnectFrame disconnectFrame = (DisconnectFrame) message;
+            for (String topic : topics) {
+                connections.getTopicList().get(topic).removeIf(pair -> connectionId == pair.getKey());
+            }
+            connections.send(connectionId, new ReceiptFrame(disconnectFrame.getReceipt()));
+        } else if (message instanceof SendFrame) {
 
         }
     }
 
+
     private void login(String userName, String password, String version){
         HashMap<String, String> users = connections.getUsers();
-        HashMap<String, Boolean> loggedUsers = connections.getLoggedUsers();
+        ConcurrentHashMap<String, Boolean> loggedUsers = connections.getLoggedUsers();
         users.putIfAbsent(userName, password);
         loggedUsers.putIfAbsent(userName, false);
         if(connections.getLoggedUsers().get(userName))
