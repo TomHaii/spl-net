@@ -9,20 +9,21 @@ import java.util.LinkedList;
 public class StompEncoderDecoder implements MessageEncoderDecoder<LinkedList<String>> {
 
     private byte[] bytes = new byte[1 << 10]; //start with 1k
+    LinkedList<String> message = new LinkedList<>();
+
     private int len = 0;
 
     @Override
     public LinkedList<String> decodeNextByte(byte nextByte) {
         //notice that the top 128 ascii characters have the same representation as their utf-8 counterparts
         //this allow us to do the following comparison
-        LinkedList<String> message = new LinkedList<>();
         if (nextByte == '\u0000') {
             pushByte(nextByte);
             message.addLast(popString());
             return message;
         }
         if (nextByte == '\n') {
-             message.addLast(popString());
+            message.addLast(popString());
         }
         pushByte(nextByte);
         return null; //not a full message yet
