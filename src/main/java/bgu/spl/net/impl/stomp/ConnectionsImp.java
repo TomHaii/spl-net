@@ -16,12 +16,14 @@ public class ConnectionsImp<T> implements Connections<T> {
     private HashMap<String, String> users;
     private ConcurrentHashMap<Integer, String> userIds;
     private ConcurrentHashMap<String, Boolean> loggedUsers;
-    private ConcurrentHashMap<String, LinkedList<Pair<Integer, Integer>>> topicList;
+    private ConcurrentHashMap<String, LinkedList<Integer>>topicList;
+    private ConcurrentHashMap<Integer, String> topicsBySubscriptionsId;
     private AtomicInteger connectionId = new AtomicInteger(0);
 
 
     public ConnectionsImp() {
         connectionHandlerConcurrentHashMap = new HashMap<>();;
+        topicsBySubscriptionsId = new ConcurrentHashMap<>();
         topicList = new ConcurrentHashMap<>();
         users = new HashMap<>();
         loggedUsers = new ConcurrentHashMap<>();
@@ -53,11 +55,15 @@ public class ConnectionsImp<T> implements Connections<T> {
     }
 
 
-    public ConcurrentHashMap<String, LinkedList<Pair<Integer, Integer>>> getTopicList() {
+    public ConcurrentHashMap<String, LinkedList<Integer>>getTopicList() {
         return topicList;
     }
 
     public ConcurrentHashMap<Integer, String> getUserIds() {
         return userIds;
+    }
+
+    public ConcurrentHashMap<Integer, String> getTopicsBySubscriptionsId() {
+        return topicsBySubscriptionsId;
     }
 }
