@@ -10,13 +10,13 @@ import java.util.LinkedList;
 public class StompProtocol implements StompMessagingProtocol {
     private boolean terminate;
     private int connectionId;
-    private ConnectionsImp<String> connections;
+    private ConnectionsImp<Frame> connections;
 
 
     @Override
-    public void start(int connectionId, Connections<String> connections) {
+    public void start(int connectionId, Connections<Frame> connections) {
         this.connectionId = connectionId;
-        this.connections = (ConnectionsImp<String>) connections;
+        this.connections = (ConnectionsImp<Frame>) connections;
         this.terminate = false;
     }
 
@@ -24,20 +24,27 @@ public class StompProtocol implements StompMessagingProtocol {
     public void process(Frame message) {
         if(message instanceof ConnectFrame)
         {
-            connections.
+            ConnectFrame connectFrame = (ConnectFrame) message;
+            login(connectFrame.getLogin(), connectFrame.getPasscode(), connectFrame.getVersion());
+        }
+        if(message instanceof SubscribeFrame){
+
         }
     }
 
-    private void login(String userName, String password){
+    private void login(String userName, String password, String version){
         HashMap<String, String> users = connections.getUsers();
         HashMap<String, Boolean> loggedUsers = connections.getLoggedUsers();
         users.putIfAbsent(userName, password);
         loggedUsers.putIfAbsent(userName, false);
-        if(connections.getLoggedUsers().get(userName)) {
-            Frame frame = new ErrorFrame(connectionId, "User is already logged in");
-            boolean result = connections.send(connectionId, frame);
-        }else if(users.get(userName).equals(password))
-            connections.send(connectionId, "Wrong password");
+        if(connections.getLoggedUsers().get(userName))
+            connections.send(connectionId, new ErrorFrame(connectionId, "User is already logged in"));
+        else if(users.get(userName).equals(password))
+            connections.send(connectionId, new ErrorFrame(connectionId, "Wrong password"));
+        else{
+            loggedUsers.replace(userName, true);
+            connections.send(connectionId, new ConnectedFrame(version));
+        }
 
     }
 

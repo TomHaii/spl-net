@@ -9,6 +9,8 @@ public class ConnectionsImp<T> implements Connections<T> {
     private HashMap<String, String> users;
     private HashMap<String, Boolean> loggedUsers;
 
+
+
     public ConnectionsImp(HashMap<Integer, ConnectionHandler<T>> connectionHandlerConcurrentHashMap, HashMap<String, String> users, HashMap<String, Boolean> loggedUsers) {
         this.connectionHandlerConcurrentHashMap = connectionHandlerConcurrentHashMap;
         this.users = users;
