@@ -1,23 +1,27 @@
 package bgu.spl.net.impl.stomp;
+;
+import java.util.LinkedList;
 
-import bgu.spl.net.impl.rci.Command;
-
-import java.io.Serializable;
-
-public class ConnectFrame implements Command<String> {
+public class ConnectFrame implements Frame {
     private String host;
     private String login;
     private String passcode;
+    private String version;
 
-    public ConnectFrame(String host, String login, String passcode) {
-        this.host = host;
-        this.login = login;
-        this.passcode = passcode;
-    }
-
-    @Override
-    public Serializable execute(String arg) {
-        return null;
+    public ConnectFrame(LinkedList<String> message) {
+        for(String msg: message){
+            if(msg.startsWith("accept-version"))
+                version = msg.substring(14);
+            else if(msg.startsWith("host")){
+                host = msg.substring(4);
+            }
+            else if(msg.startsWith("login")){
+                login = msg.substring(5);
+            }
+            else if(msg.startsWith("passcode")){
+                passcode = msg.substring(8);
+            }
+        }
     }
 
 
@@ -31,5 +35,9 @@ public class ConnectFrame implements Command<String> {
 
     public String getPasscode() {
         return passcode;
+    }
+
+    public String getVersion() {
+        return version;
     }
 }

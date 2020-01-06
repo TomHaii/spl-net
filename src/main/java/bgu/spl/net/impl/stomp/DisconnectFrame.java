@@ -1,23 +1,19 @@
 package bgu.spl.net.impl.stomp;
 
-import bgu.spl.net.impl.rci.Command;
+import java.util.LinkedList;
 
-import java.io.Serializable;
-
-public class DisconnectFrame implements Command<String> {
+public class DisconnectFrame implements Frame {
     private String receipt;
 
-    public DisconnectFrame(String receipt) {
-        this.receipt = receipt;
-    }
-
-
-    @Override
-    public Serializable execute(String arg) {
-        return null;
+    public DisconnectFrame(LinkedList<String> message) {
+        for(String msg: message){
+            if(msg.startsWith("receipt"))
+                receipt = msg.substring(7);
+        }
     }
 
     public String getReceipt() {
         return receipt;
     }
+
 }

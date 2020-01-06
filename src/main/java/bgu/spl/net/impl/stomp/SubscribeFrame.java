@@ -1,15 +1,35 @@
 package bgu.spl.net.impl.stomp;
 
-import bgu.spl.net.impl.rci.Command;
+import java.util.LinkedList;
 
-import java.io.Serializable;
+public class SubscribeFrame implements Frame {
+    private String destination;
+    private int id;
+    private int receipt;
 
-public class SubscribeFrame implements Command<String> {
+    public SubscribeFrame(LinkedList<String> message) {
+        for(String msg: message){
+            if(msg.startsWith("destination"))
+                destination = msg.substring(12);
+            else if(msg.startsWith("id")){
+                id = Integer.parseInt(msg.substring(3));
+            }
+            else if(msg.startsWith("receipt")){
+                receipt = Integer.parseInt(msg.substring(7));
+            }
+        }
+    }
 
 
+    public String getDestination() {
+        return destination;
+    }
 
-    @Override
-    public Serializable execute(String arg) {
-        return null;
+    public int getId() {
+        return id;
+    }
+
+    public int getReceipt() {
+        return receipt;
     }
 }
