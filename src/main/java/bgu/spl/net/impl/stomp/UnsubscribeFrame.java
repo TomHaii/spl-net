@@ -7,8 +7,8 @@ public class UnsubscribeFrame implements Frame{
 
     public UnsubscribeFrame(LinkedList<String> message) {
         for(String msg: message){
-            if(msg.startsWith("id")){
-                id = Integer.parseInt(msg.substring(3));
+            if(msg.contains("id")){
+                id = Integer.parseInt(msg.split(":")[1]);
             }
         }
     }

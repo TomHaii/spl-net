@@ -7,8 +7,8 @@ public class DisconnectFrame implements Frame {
 
     public DisconnectFrame(LinkedList<String> message) {
         for(String msg: message){
-            if(msg.startsWith("receipt"))
-                receipt = Integer.parseInt(msg.substring(7));
+            if(msg.contains("receipt"))
+                receipt = Integer.parseInt(msg.split(":")[1]);
         }
     }
 

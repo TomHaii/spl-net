@@ -30,8 +30,9 @@ public class StompEncoderDecoder implements MessageEncoderDecoder<Frame> {
 
     private Frame buildFrame(LinkedList<String> message) {
         String firstWord = message.getFirst();
+        System.out.println(firstWord);
         switch (firstWord) {
-            case "CONNECT":
+            case "STOMP":
                 return new ConnectFrame(message);
             case "SEND":
                 return new SendFrame(message);

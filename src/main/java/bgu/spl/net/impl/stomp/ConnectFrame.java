@@ -10,16 +10,18 @@ public class ConnectFrame implements Frame {
 
     public ConnectFrame(LinkedList<String> message) {
         for(String msg: message){
-            if(msg.startsWith("accept-version"))
-                version = msg.substring(14);
-            else if(msg.startsWith("host")){
-                host = msg.substring(4);
+            System.out.println(msg);
+            if(msg.contains("accept-version")) {
+                version = msg.split(":")[1];
             }
-            else if(msg.startsWith("login")){
-                login = msg.substring(5);
+            else if(msg.contains("host")){
+                host = msg.split(":")[1];
             }
-            else if(msg.startsWith("passcode")){
-                passcode = msg.substring(8);
+            else if(msg.contains("login")){
+                login = msg.split(":")[1];
+            }
+            else if(msg.contains("passcode")){
+                passcode = msg.split(":")[1];
             }
         }
     }

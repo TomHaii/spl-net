@@ -11,8 +11,8 @@ public class SendFrame implements Frame {
 
     public SendFrame(LinkedList<String> message) {
         for(String msg: message){
-            if(msg.startsWith("destination"))
-                destination = msg.substring(12);
+            if(msg.contains("destination"))
+                destination = msg.split(":")[1];
             else if(!msg.equals("^@") && !msg.equals("\n")){
                 body = body + msg;
             }

@@ -10,12 +10,12 @@ public class SubscribeFrame implements Frame {
     public SubscribeFrame(LinkedList<String> message) {
         for(String msg: message){
             if(msg.startsWith("destination"))
-                destination = msg.substring(12);
+                destination = msg.split(":")[1];
             else if(msg.startsWith("id")){
-                id = Integer.parseInt(msg.substring(3));
+                id = Integer.parseInt(msg.split(":")[1]);
             }
             else if(msg.startsWith("receipt")){
-                receipt = Integer.parseInt(msg.substring(7));
+                receipt = Integer.parseInt(msg.split(":")[1]);
             }
         }
     }
