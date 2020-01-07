@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class StompProtocol implements StompMessagingProtocol {
     private boolean terminate;
     private int connectionId;
+    private String currentUser;
     private ConnectionsImp<Frame> connections;
     private LinkedList<String> topics;
 
@@ -46,6 +47,7 @@ public class StompProtocol implements StompMessagingProtocol {
             }
             connections.send(connectionId, new ReceiptFrame(disconnectFrame.getReceipt()));
             connections.disconnect(connectionId);
+            connections.getLoggedUsers().replace(currentUser, false);
             terminate = true;
         }
         else if (message instanceof UnsubscribeFrame) {
@@ -73,6 +75,8 @@ public class StompProtocol implements StompMessagingProtocol {
         ConcurrentHashMap<String, Boolean> loggedUsers = connections.getLoggedUsers();
         users.putIfAbsent(userName, password);
         loggedUsers.putIfAbsent(userName, false);
+        if(userName != null)
+            currentUser = userName;
         if(connections.getLoggedUsers().get(userName))
             connections.send(connectionId, new ErrorFrame(connectionId, "User is already logged in"));
         else if(!users.get(userName).equals(password))
