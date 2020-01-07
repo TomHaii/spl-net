@@ -34,21 +34,23 @@ public class StompProtocol implements StompMessagingProtocol {
             String topic = subscribeFrame.getDestination();
             topics.add(topic);
             connections.getTopicList().putIfAbsent(subscribeFrame.getDestination(), new LinkedList<>());
-            connections.getTopicList().get(subscribeFrame.getDestination()).add(connectionId);
+            connections.getTopicList().get(subscribeFrame.getDestination()).add(new Pair<Integer, Integer>(connectionId, subscribeFrame.getId()));
             connections.getTopicsBySubscriptionsId().putIfAbsent(subscribeFrame.getId(),topic);
             connections.send(connectionId, new ReceiptFrame(subscribeFrame.getReceipt()));
         } else if (message instanceof DisconnectFrame) {
             DisconnectFrame disconnectFrame = (DisconnectFrame) message;
             for (String topic : topics) {
-                connections.getTopicList().get(topic).remove((Integer)connectionId);
+                connections.getTopicList().get(topic).removeIf(pair -> pair.getKey() == connectionId);
             }
             connections.send(connectionId, new ReceiptFrame(disconnectFrame.getReceipt()));
+            connections.disconnect(connectionId);
+            terminate = true;
         }
         else if (message instanceof UnsubscribeFrame) {
             UnsubscribeFrame unsubscribeFrame = (UnsubscribeFrame) message;
             int subscriptionId = unsubscribeFrame.getId();
             String topic = connections.getTopicsBySubscriptionsId().get(subscriptionId);
-            connections.getTopicList().get(topic).remove((Integer)connectionId);
+            connections.getTopicList().get(topic).removeIf(pair -> pair.getKey() == connectionId);
             topics.remove(topic);
             connections.send(connectionId, new ReceiptFrame(subscriptionId));
         }

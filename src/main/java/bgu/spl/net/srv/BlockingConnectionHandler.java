@@ -1,11 +1,7 @@
 package bgu.spl.net.srv;
-
-import bgu.spl.net.api.MessageEncoderDecoder;
-import bgu.spl.net.api.MessagingProtocol;
 import bgu.spl.net.api.StompMessagingProtocol;
 import bgu.spl.net.impl.stomp.Frame;
 import bgu.spl.net.impl.stomp.StompEncoderDecoder;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -30,10 +26,8 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
     public void run() {
         try (Socket sock = this.sock) { //just for automatic closing
             int read;
-
             in = new BufferedInputStream(sock.getInputStream());
             out = new BufferedOutputStream(sock.getOutputStream());
-
             while (!protocol.shouldTerminate() && connected && (read = in.read()) >= 0) {
                 Frame nextMessage = encdec.decodeNextByte((byte) read);
                 if (nextMessage != null) {

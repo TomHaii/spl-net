@@ -2,9 +2,7 @@ package bgu.spl.net.impl.stomp;
 import bgu.spl.net.srv.ConnectionHandler;
 import bgu.spl.net.srv.Connections;
 import javafx.util.Pair;
-
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -15,7 +13,7 @@ public class ConnectionsImp<T> implements Connections<T> {
 
     private HashMap<String, String> users;
     private ConcurrentHashMap<String, Boolean> loggedUsers;
-    private ConcurrentHashMap<String, LinkedList<Integer>>topicList;
+    private ConcurrentHashMap<String, LinkedList<Pair<Integer, Integer>>> topicList;
     private ConcurrentHashMap<Integer, String> topicsBySubscriptionsId;
     private AtomicInteger messageId = new AtomicInteger(0);
 
@@ -40,12 +38,19 @@ public class ConnectionsImp<T> implements Connections<T> {
 
     @Override
     public void send(String channel, T msg) {
+        MessageFrame msgFrame = (MessageFrame) msg;
+        for (Pair<Integer,Integer> pair : topicList.get(channel)){
+            int connectionId = pair.getKey();
+            int subscriberId = pair.getValue();
+            msgFrame.setSubscription(subscriberId);
+            connectionHandlerConcurrentHashMap.get(connectionId).send(msg);
+        }
 
     }
 
     @Override
     public void disconnect(int connectionId) {
-
+        connectionHandlerConcurrentHashMap.remove(connectionId);
     }
 
     public HashMap<String, String> getUsers() {
@@ -57,7 +62,7 @@ public class ConnectionsImp<T> implements Connections<T> {
     }
 
 
-    public ConcurrentHashMap<String, LinkedList<Integer>>getTopicList() {
+    public ConcurrentHashMap<String, LinkedList<Pair<Integer, Integer>>> getTopicList() {
         return topicList;
     }
 
