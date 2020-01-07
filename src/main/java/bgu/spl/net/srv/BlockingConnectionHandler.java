@@ -1,37 +1,42 @@
 package bgu.spl.net.srv;
-import bgu.spl.net.api.StompMessagingProtocol;
+import bgu.spl.net.impl.stomp.ConnectionsImp;
 import bgu.spl.net.impl.stomp.Frame;
 import bgu.spl.net.impl.stomp.StompEncoderDecoder;
+import bgu.spl.net.impl.stomp.StompProtocol;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler<T> {
-
-    private final StompMessagingProtocol protocol;
+public class BlockingConnectionHandler implements Runnable, ConnectionHandler<Frame> {
+    private ConnectionsImp<Frame> connections;
+    private final StompProtocol protocol;
     private final StompEncoderDecoder encdec;
     private final Socket sock;
     private BufferedInputStream in;
     private BufferedOutputStream out;
     private volatile boolean connected = true;
+    private int id;
 
-    public BlockingConnectionHandler(Socket sock, StompEncoderDecoder reader, StompMessagingProtocol protocol) {
+    public BlockingConnectionHandler(Socket sock, StompEncoderDecoder reader, StompProtocol protocol, int id, ConnectionsImp<Frame> connections) {
         this.sock = sock;
         this.encdec = reader;
         this.protocol = protocol;
+        this.id = id;
+        this.connections = connections;
     }
 
     @Override
     public void run() {
         try (Socket sock = this.sock) { //just for automatic closing
+            this.protocol.start(id, connections);
             int read;
             in = new BufferedInputStream(sock.getInputStream());
             out = new BufferedOutputStream(sock.getOutputStream());
             while (!protocol.shouldTerminate() && connected && (read = in.read()) >= 0) {
-                Frame nextMessage = encdec.decodeNextByte((byte) read);
+                bgu.spl.net.impl.stomp.Frame nextMessage = encdec.decodeNextByte((byte) read);
                 if (nextMessage != null) {
-                    send((T)nextMessage);
+                    send((Frame)nextMessage);
                     out.flush();
                 }
             }
@@ -49,8 +54,8 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
     }
 
     @Override
-    public void send(T msg) {
-        byte[] bytesMsg = encdec.encode((Frame)msg);
+    public void send(Frame msg) {
+        byte[] bytesMsg = encdec.encode((bgu.spl.net.impl.stomp.Frame)msg);
         try {
             out.write(bytesMsg);
         } catch (IOException e) {
