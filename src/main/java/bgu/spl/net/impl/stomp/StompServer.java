@@ -1,24 +1,20 @@
 package bgu.spl.net.impl.stomp;
+import bgu.spl.net.srv.Server;
 
-import bgu.spl.net.srv.BaseServer;
-import bgu.spl.net.srv.BlockingConnectionHandler;
-
-import java.util.function.Supplier;
-
-public class StompServer extends BaseServer {
-
-    public StompServer(int port, Supplier protocolFactory, Supplier encdecFactory) {
-        super(port, protocolFactory, encdecFactory);
-    }
+public class StompServer {
 
     public static void main(String[] args) {
+        switch (args[1]){
+            case "tpc":
+                Server.threadPerClient(Integer.parseInt(args[0]), StompProtocol::new, StompEncoderDecoder::new).serve();
+                break;
+            case "reactor":
+//                Server.reactor(
+//                        Runtime.getRuntime().availableProcessors(),
+//                        Integer.parseInt(args[0]), StompProtocol::new, StompEncoderDecoder::new).serve();
+                break;
+        }
 
-
-    }
-
-
-    @Override
-    protected void execute(BlockingConnectionHandler handler) {
 
     }
 }
