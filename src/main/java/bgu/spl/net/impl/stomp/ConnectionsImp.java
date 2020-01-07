@@ -14,11 +14,10 @@ public class ConnectionsImp<T> implements Connections<T> {
     private HashMap<Integer, ConnectionHandler<T>> connectionHandlerConcurrentHashMap;
 
     private HashMap<String, String> users;
-    private ConcurrentHashMap<Integer, String> userIds;
     private ConcurrentHashMap<String, Boolean> loggedUsers;
     private ConcurrentHashMap<String, LinkedList<Integer>>topicList;
     private ConcurrentHashMap<Integer, String> topicsBySubscriptionsId;
-    private AtomicInteger connectionId = new AtomicInteger(0);
+    private AtomicInteger messageId = new AtomicInteger(0);
 
 
     public ConnectionsImp() {
@@ -27,12 +26,15 @@ public class ConnectionsImp<T> implements Connections<T> {
         topicList = new ConcurrentHashMap<>();
         users = new HashMap<>();
         loggedUsers = new ConcurrentHashMap<>();
-        userIds = new ConcurrentHashMap<>();
     }
 
 
     @Override
     public boolean send(int connectionId, T msg) {
+        if(connectionHandlerConcurrentHashMap.containsKey(connectionId)){
+            connectionHandlerConcurrentHashMap.get(connectionId).send(msg);
+            return true;
+        }
         return false;
     }
 
@@ -59,11 +61,17 @@ public class ConnectionsImp<T> implements Connections<T> {
         return topicList;
     }
 
-    public ConcurrentHashMap<Integer, String> getUserIds() {
-        return userIds;
-    }
+
 
     public ConcurrentHashMap<Integer, String> getTopicsBySubscriptionsId() {
         return topicsBySubscriptionsId;
+    }
+
+
+    public int getMessageId() {
+        return messageId.get();
+    }
+    public void incMessageId(){
+        messageId.compareAndSet(messageId.get(), messageId.get()+1);
     }
 }

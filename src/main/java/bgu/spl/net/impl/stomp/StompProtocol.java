@@ -53,7 +53,12 @@ public class StompProtocol implements StompMessagingProtocol {
             connections.send(connectionId, new ReceiptFrame(subscriptionId));
         }
         else if (message instanceof SendFrame) {
-
+            SendFrame sendFrame = (SendFrame) message;
+            int msgId = connections.getMessageId();
+            String dest = sendFrame.getDestination();
+            String body = sendFrame.getBody();
+            connections.send(dest, new MessageFrame(msgId, dest, body));
+            connections.incMessageId();
         }
     }
 

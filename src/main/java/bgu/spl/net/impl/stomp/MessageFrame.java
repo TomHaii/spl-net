@@ -2,12 +2,11 @@ package bgu.spl.net.impl.stomp;
 
 public class MessageFrame implements Frame {
     private int subscription;
-    private String messageID;
+    private int messageID;
     private String destination;
     private String body;
 
-    public MessageFrame(int subscription, String messageID, String destination, String body) {
-        this.subscription = subscription;
+    public MessageFrame(int messageID, String destination, String body) {
         this.messageID = messageID;
         this.destination = destination;
         this.body = body;
@@ -16,5 +15,9 @@ public class MessageFrame implements Frame {
     @Override
     public String toString(){
         return "RECEIPT\n" + "subscription:" + subscription + "\nMessage-id:" + messageID + "\ndestination:" + destination + "\n" + body + "\n^@";
+    }
+
+    public void setSubscription(int subscription) {
+        this.subscription = subscription;
     }
 }
