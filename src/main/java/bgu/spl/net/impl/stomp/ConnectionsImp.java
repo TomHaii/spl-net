@@ -29,7 +29,9 @@ public class ConnectionsImp<T> implements Connections<T> {
 
     @Override
     public boolean send(int connectionId, T msg) {
+        System.out.println("Sending on connectionsImp");
         if(connectionHandlerConcurrentHashMap.containsKey(connectionId)){
+            System.out.println("found connectionsId");
             connectionHandlerConcurrentHashMap.get(connectionId).send(msg);
             return true;
         }
@@ -51,6 +53,10 @@ public class ConnectionsImp<T> implements Connections<T> {
     @Override
     public void disconnect(int connectionId) {
         connectionHandlerConcurrentHashMap.remove(connectionId);
+    }
+
+    public void connect(int connectionId, ConnectionHandler<T> connectionHandler){
+        connectionHandlerConcurrentHashMap.putIfAbsent(connectionId, connectionHandler);
     }
 
     public HashMap<String, String> getUsers() {

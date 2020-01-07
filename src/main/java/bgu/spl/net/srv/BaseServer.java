@@ -27,7 +27,7 @@ public class BaseServer<T> implements Server<T> {
             int port,
             Supplier<StompProtocol> protocolFactory,
             Supplier<StompEncoderDecoder> encdecFactory) {
-        connectionsNum = new AtomicInteger(0);
+        connectionsNum = new AtomicInteger(1);
         connections = new ConnectionsImp<>();
         this.port = port;
         this.protocolFactory = protocolFactory;
@@ -45,7 +45,8 @@ public class BaseServer<T> implements Server<T> {
                 BlockingConnectionHandler handler = new BlockingConnectionHandler(
                         clientSock,
                         encdecFactory.get(),
-                        protocolFactory.get(), connectionsNum.getAndIncrement(), connections);
+                        protocolFactory.get(), connectionsNum.get(), connections);
+                connections.connect(connectionsNum.getAndIncrement(), handler);
                 execute(handler);
             }
         } catch (IOException ex) {

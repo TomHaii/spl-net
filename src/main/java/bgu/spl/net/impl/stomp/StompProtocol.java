@@ -26,7 +26,9 @@ public class StompProtocol implements StompMessagingProtocol {
 
     @Override
     public void process(Frame message) {
+        System.out.println("I am at process " + message.toString());
         if (message instanceof ConnectFrame) {
+            System.out.println("Instance of connectFrame");
             ConnectFrame connectFrame = (ConnectFrame) message;
             login(connectFrame.getLogin(), connectFrame.getPasscode(), connectFrame.getVersion());
         } else if (message instanceof SubscribeFrame) {
@@ -72,7 +74,7 @@ public class StompProtocol implements StompMessagingProtocol {
         loggedUsers.putIfAbsent(userName, false);
         if(connections.getLoggedUsers().get(userName))
             connections.send(connectionId, new ErrorFrame(connectionId, "User is already logged in"));
-        else if(users.get(userName).equals(password))
+        else if(!users.get(userName).equals(password))
             connections.send(connectionId, new ErrorFrame(connectionId, "Wrong password"));
         else{
             loggedUsers.replace(userName, true);

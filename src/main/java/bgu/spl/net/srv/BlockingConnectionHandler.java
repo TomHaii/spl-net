@@ -34,9 +34,10 @@ public class BlockingConnectionHandler implements Runnable, ConnectionHandler<Fr
             in = new BufferedInputStream(sock.getInputStream());
             out = new BufferedOutputStream(sock.getOutputStream());
             while (!protocol.shouldTerminate() && connected && (read = in.read()) >= 0) {
-                bgu.spl.net.impl.stomp.Frame nextMessage = encdec.decodeNextByte((byte) read);
+                System.out.println("I am here on the connection waiting :(");
+                Frame nextMessage = encdec.decodeNextByte((byte) read);
                 if (nextMessage != null) {
-                    send((Frame)nextMessage);
+                    protocol.process(nextMessage);
                     out.flush();
                 }
             }
@@ -55,7 +56,8 @@ public class BlockingConnectionHandler implements Runnable, ConnectionHandler<Fr
 
     @Override
     public void send(Frame msg) {
-        byte[] bytesMsg = encdec.encode((bgu.spl.net.impl.stomp.Frame)msg);
+        System.out.println("I AM SENDING  " + msg.toString());
+        byte[] bytesMsg = encdec.encode(msg);
         try {
             out.write(bytesMsg);
         } catch (IOException e) {
