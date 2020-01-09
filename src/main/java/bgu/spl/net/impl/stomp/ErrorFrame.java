@@ -11,6 +11,6 @@ public class ErrorFrame implements Frame {
 
     @Override
     public String toString(){
-        return "ERROR\n" + "receipt-id:" + receiptId + "\nmessage:" + message + "\n^@";
+        return "ERROR\n" + "receipt-id:" + receiptId + "\nmessage:" + message + '\n' + '\u0000';
     }
 }

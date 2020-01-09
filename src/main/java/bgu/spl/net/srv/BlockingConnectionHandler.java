@@ -28,13 +28,13 @@ public class BlockingConnectionHandler implements Runnable, ConnectionHandler<Fr
 
     @Override
     public void run() {
+        this.protocol.start(id, connections);
+
         try (Socket sock = this.sock) { //just for automatic closing
-            this.protocol.start(id, connections);
             int read;
             in = new BufferedInputStream(sock.getInputStream());
             out = new BufferedOutputStream(sock.getOutputStream());
             while (!protocol.shouldTerminate() && connected && (read = in.read()) >= 0) {
-                System.out.println("I am here on the connection waiting :(");
                 Frame nextMessage = encdec.decodeNextByte((byte) read);
                 if (nextMessage != null) {
                     protocol.process(nextMessage);
@@ -56,14 +56,14 @@ public class BlockingConnectionHandler implements Runnable, ConnectionHandler<Fr
 
     @Override
     public void send(Frame msg) {
-        System.out.println("I AM SENDING  " + msg.toString());
-        byte[] bytesMsg = encdec.encode(msg);
-        System.out.println("finished encoding");
-        try {
-            out.write(bytesMsg);
-            System.out.println("finished sendingmsg");
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(msg != null) {
+            System.out.println("I AM SENDING  " + msg.toString());
+            byte[] bytesMsg = encdec.encode(msg);
+            try {
+                out.write(bytesMsg);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

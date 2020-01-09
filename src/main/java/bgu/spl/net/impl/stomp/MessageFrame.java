@@ -14,7 +14,7 @@ public class MessageFrame implements Frame {
 
     @Override
     public String toString(){
-        return "RECEIPT\n" + "subscription:" + subscription + "\nMessage-id:" + messageID + "\ndestination:" + destination + "\n" + body + "\n^@";
+        return "RECEIPT\n" + "subscription:" + subscription + "\nMessage-id:" + messageID + "\ndestination:" + destination + '\n' + body + '\n' + '\u0000';
     }
 
     public void setSubscription(int subscription) {
