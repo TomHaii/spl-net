@@ -10,7 +10,6 @@ public class ConnectFrame implements Frame {
 
     public ConnectFrame(LinkedList<String> message) {
         for(String msg: message){
-            System.out.println(msg);
             if(msg.contains("accept-version")) {
                 version = msg.split(":")[1];
             }

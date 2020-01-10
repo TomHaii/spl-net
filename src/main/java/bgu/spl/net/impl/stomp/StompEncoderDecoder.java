@@ -9,7 +9,7 @@ import java.util.LinkedList;
 public class StompEncoderDecoder implements MessageEncoderDecoder<Frame> {
 
     private byte[] bytes = new byte[1 << 10]; //start with 1k
-    LinkedList<String> message = new LinkedList<>();
+    private LinkedList<String> message = new LinkedList<>();
     private int len = 0;
 
     @Override
@@ -32,7 +32,7 @@ public class StompEncoderDecoder implements MessageEncoderDecoder<Frame> {
         String firstWord = message.getFirst();
         System.out.println(firstWord);
         switch (firstWord) {
-            case "STOMP":
+            case "CONNECT":
                 return new ConnectFrame(message);
             case "SEND":
                 return new SendFrame(message);

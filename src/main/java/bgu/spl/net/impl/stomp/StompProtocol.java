@@ -27,9 +27,7 @@ public class StompProtocol implements StompMessagingProtocol {
 
     @Override
     public void process(Frame message) {
-        System.out.println("I am at process " + message.toString());
         if (message instanceof ConnectFrame) {
-            System.out.println("Instance of connectFrame");
             ConnectFrame connectFrame = (ConnectFrame) message;
             login(connectFrame.getLogin(), connectFrame.getPasscode(), connectFrame.getVersion());
         } else if (message instanceof SubscribeFrame) {
@@ -74,6 +72,7 @@ public class StompProtocol implements StompMessagingProtocol {
         HashMap<String, String> users = connections.getUsers();
         ConcurrentHashMap<String, Boolean> loggedUsers = connections.getLoggedUsers();
         users.putIfAbsent(userName, password);
+        System.out.println("user " + userName + " is trying to login");
         loggedUsers.putIfAbsent(userName, false);
         if(userName != null)
             currentUser = userName;
