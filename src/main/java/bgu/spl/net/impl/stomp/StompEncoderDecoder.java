@@ -20,7 +20,7 @@ public class StompEncoderDecoder implements MessageEncoderDecoder<Frame> {
         if (nextByte == '\u0000') {
             pushByte(nextByte);
             message.addLast(popString());
-            return buildFrame(message);
+            return buildFrame();
         }
         if (nextByte == '\n') {
             message.addLast(popString());
@@ -29,20 +29,30 @@ public class StompEncoderDecoder implements MessageEncoderDecoder<Frame> {
         return null; //not a full message yet
     }
 
-    private Frame buildFrame(LinkedList<String> message) {
+    private Frame buildFrame() {
         String firstWord = message.getFirst();
         System.out.println(firstWord);
         switch (firstWord) {
-            case "CONNECT":
-                return new ConnectFrame(message);
+            case "STOMP":
+                ConnectFrame connectFrame = new ConnectFrame(message);
+                message.clear();
+                return connectFrame;
             case "SEND":
-                return new SendFrame(message);
+                SendFrame sendFrame = new SendFrame(message);
+                message.clear();
+                return sendFrame;
             case "SUBSCRIBE":
-                return new SubscribeFrame(message);
+                SubscribeFrame subscribeFrame = new SubscribeFrame(message);
+                message.clear();
+                return subscribeFrame;
             case "DISCONNECT":
-                return new DisconnectFrame(message);
+                DisconnectFrame disconnectFrame = new DisconnectFrame(message);
+                message.clear();
+                return disconnectFrame;
             case "UNSUBSCRIBE":
-                return new UnsubscribeFrame(message);
+                UnsubscribeFrame unsubscribeFrame = new UnsubscribeFrame(message);
+                message.clear();
+                return unsubscribeFrame;
             default:
                 System.out.println("Invalid Stomp Command");
                 return null;

@@ -8,7 +8,11 @@ public class DisconnectFrame implements Frame {
     public DisconnectFrame(LinkedList<String> message) {
         for(String msg: message){
             if(msg.contains("receipt"))
-                receipt = Integer.parseInt(msg.split(":")[1]);
+                try {
+                    receipt = Integer.parseInt(msg.split(":")[1]);
+                }
+                catch (NumberFormatException e){
+                }
         }
     }
 

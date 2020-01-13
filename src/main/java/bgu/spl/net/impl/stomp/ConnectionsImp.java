@@ -14,15 +14,15 @@ public class ConnectionsImp<T> implements Connections<T> {
 
     private HashMap<String, String> users;
     private ConcurrentHashMap<String, Boolean> loggedUsers;
-    private ConcurrentHashMap<String, LinkedList<Pair<Integer, Integer>>> topicList;
-    private ConcurrentHashMap<Integer, String> topicsBySubscriptionsId;
+    private HashMap<String, LinkedList<Pair<Integer, Integer>>> topicList;
+    private HashMap<Integer, String> topicsBySubscriptionsId;
     private AtomicInteger messageId = new AtomicInteger(0);
 
 
     public ConnectionsImp() {
         connectionHandlerConcurrentHashMap = new HashMap<>();;
-        topicsBySubscriptionsId = new ConcurrentHashMap<>();
-        topicList = new ConcurrentHashMap<>();
+        topicsBySubscriptionsId = new HashMap<>();
+        topicList = new HashMap<>();
         users = new HashMap<>();
         loggedUsers = new ConcurrentHashMap<>();
     }
@@ -40,13 +40,15 @@ public class ConnectionsImp<T> implements Connections<T> {
     @Override
     public void send(String channel, T msg) {
         MessageFrame msgFrame = (MessageFrame) msg;
-        for (Pair<Integer,Integer> pair : topicList.get(channel)){
-            int connectionId = pair.getKey();
-            int subscriberId = pair.getValue();
-            msgFrame.setSubscription(subscriberId);
-            connectionHandlerConcurrentHashMap.get(connectionId).send(msg);
-        }
 
+        if (topicList.get(channel) != null) {
+            for (Pair<Integer, Integer> pair : topicList.get(channel)) {
+                int connectionId = pair.getKey();
+                int subscriberId = pair.getValue();
+                msgFrame.setSubscription(subscriberId);
+                connectionHandlerConcurrentHashMap.get(connectionId).send(msg);
+            }
+        }
     }
 
     @Override
@@ -67,13 +69,13 @@ public class ConnectionsImp<T> implements Connections<T> {
     }
 
 
-    public ConcurrentHashMap<String, LinkedList<Pair<Integer, Integer>>> getTopicList() {
+    public HashMap<String, LinkedList<Pair<Integer, Integer>>> getTopicList() {
         return topicList;
     }
 
 
 
-    public ConcurrentHashMap<Integer, String> getTopicsBySubscriptionsId() {
+    public HashMap<Integer, String> getTopicsBySubscriptionsId() {
         return topicsBySubscriptionsId;
     }
 

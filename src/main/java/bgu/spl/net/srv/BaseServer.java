@@ -45,6 +45,7 @@ public class BaseServer<T> implements Server<T> {
                         protocolFactory.get(), connectionsNum.get(), connections);
                 connections.connect(connectionsNum.getAndIncrement(), handler);
                 execute(handler);
+                System.out.println("num of connections is " + connectionsNum);
             }
         } catch (IOException ex) {
         }
