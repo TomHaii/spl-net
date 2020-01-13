@@ -1,6 +1,6 @@
 package bgu.spl.net.srv;
 import bgu.spl.net.impl.stomp.ConnectionsImp;
-import bgu.spl.net.impl.stomp.Frame;
+import bgu.spl.net.impl.stomp.frames.Frame;
 import bgu.spl.net.impl.stomp.StompEncoderDecoder;
 import bgu.spl.net.impl.stomp.StompProtocol;
 import java.io.BufferedInputStream;

@@ -1,10 +1,7 @@
 package bgu.spl.net.srv;
 
-import bgu.spl.net.api.MessageEncoderDecoder;
-import bgu.spl.net.api.MessagingProtocol;
-import bgu.spl.net.api.StompMessagingProtocol;
 import bgu.spl.net.impl.stomp.ConnectionsImp;
-import bgu.spl.net.impl.stomp.Frame;
+import bgu.spl.net.impl.stomp.frames.Frame;
 import bgu.spl.net.impl.stomp.StompEncoderDecoder;
 import bgu.spl.net.impl.stomp.StompProtocol;
 

@@ -1,4 +1,4 @@
-package bgu.spl.net.impl.stomp;
+package bgu.spl.net.impl.stomp.frames;
 
 public class ErrorFrame implements Frame {
     private int receiptId;

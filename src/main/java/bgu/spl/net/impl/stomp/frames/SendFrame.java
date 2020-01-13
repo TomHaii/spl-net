@@ -1,8 +1,5 @@
-package bgu.spl.net.impl.stomp;
+package bgu.spl.net.impl.stomp.frames;
 
-import bgu.spl.net.impl.rci.Command;
-
-import java.io.Serializable;
 import java.util.LinkedList;
 
 public class SendFrame implements Frame {

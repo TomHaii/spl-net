@@ -1,4 +1,4 @@
-package bgu.spl.net.impl.stomp;
+package bgu.spl.net.impl.stomp.frames;
 
 public class ConnectedFrame implements Frame {
     private String version;

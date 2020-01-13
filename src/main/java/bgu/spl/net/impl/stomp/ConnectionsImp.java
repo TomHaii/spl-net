@@ -1,4 +1,5 @@
 package bgu.spl.net.impl.stomp;
+import bgu.spl.net.impl.stomp.frames.MessageFrame;
 import bgu.spl.net.srv.ConnectionHandler;
 import bgu.spl.net.srv.Connections;
 import javafx.util.Pair;
