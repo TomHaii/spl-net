@@ -33,7 +33,7 @@ public class StompEncoderDecoder implements MessageEncoderDecoder<Frame> {
         String firstWord = message.getFirst();
         System.out.println(firstWord);
         switch (firstWord) {
-            case "STOMP":
+            case "CONNECT":
                 ConnectFrame connectFrame = new ConnectFrame(message);
                 message.clear();
                 return connectFrame;

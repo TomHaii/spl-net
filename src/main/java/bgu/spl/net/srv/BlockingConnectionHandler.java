@@ -35,6 +35,7 @@ public class BlockingConnectionHandler implements Runnable, ConnectionHandler<Fr
             int read;
             in = new BufferedInputStream(sock.getInputStream());
             out = new BufferedOutputStream(sock.getOutputStream());
+
             while (!protocol.shouldTerminate() && connected && (read = in.read()) >= 0) {
                 Frame nextMessage = encdec.decodeNextByte((byte) read);
 
@@ -43,6 +44,7 @@ public class BlockingConnectionHandler implements Runnable, ConnectionHandler<Fr
                     protocol.process(nextMessage);
 
                     out.flush();
+
                 }
             }
 
