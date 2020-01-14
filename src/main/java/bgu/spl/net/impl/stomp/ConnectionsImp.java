@@ -1,4 +1,5 @@
 package bgu.spl.net.impl.stomp;
+import bgu.spl.net.impl.stomp.frames.Frame;
 import bgu.spl.net.impl.stomp.frames.MessageFrame;
 import bgu.spl.net.srv.ConnectionHandler;
 import bgu.spl.net.srv.Connections;
@@ -10,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ConnectionsImp<T> implements Connections<T> {
 
-    private HashMap<Integer, ConnectionHandler<T>> connectionHandlerConcurrentHashMap;
+    private HashMap<Integer, ConnectionHandler<T>> connectionHandlers;
 
     private HashMap<String, String> users;
     private ConcurrentHashMap<String, Boolean> loggedUsers;
@@ -20,7 +21,7 @@ public class ConnectionsImp<T> implements Connections<T> {
 
 
     public ConnectionsImp() {
-        connectionHandlerConcurrentHashMap = new HashMap<>();;
+        connectionHandlers = new HashMap<>();;
         topicsBySubscriptionsId = new HashMap<>();
         topicList = new HashMap<>();
         users = new HashMap<>();
@@ -30,8 +31,8 @@ public class ConnectionsImp<T> implements Connections<T> {
 
     @Override
     public boolean send(int connectionId, T msg) {
-        if(connectionHandlerConcurrentHashMap.containsKey(connectionId)){
-            connectionHandlerConcurrentHashMap.get(connectionId).send(msg);
+        if(connectionHandlers.containsKey(connectionId)){
+            connectionHandlers.get(connectionId).send(msg);
             return true;
         }
         return false;
@@ -39,25 +40,25 @@ public class ConnectionsImp<T> implements Connections<T> {
 
     @Override
     public void send(String channel, T msg) {
-        MessageFrame msgFrame = (MessageFrame) msg;
-
+        int i = 0;
         if (topicList.get(channel) != null) {
             for (Pair<Integer, Integer> pair : topicList.get(channel)) {
+                System.out.println(i++ + " the msg is " + msg.toString() + "\n the connectionid is " + pair.getKey());
                 int connectionId = pair.getKey();
                 int subscriberId = pair.getValue();
-                msgFrame.setSubscription(subscriberId);
-                connectionHandlerConcurrentHashMap.get(connectionId).send(msg);
+                ((MessageFrame)msg).setSubscription(subscriberId);
+                send(connectionId, msg);
             }
         }
     }
 
     @Override
     public void disconnect(int connectionId) {
-        connectionHandlerConcurrentHashMap.remove(connectionId);
+        connectionHandlers.remove(connectionId);
     }
 
     public void connect(int connectionId, ConnectionHandler<T> connectionHandler){
-        connectionHandlerConcurrentHashMap.putIfAbsent(connectionId, connectionHandler);
+        connectionHandlers.putIfAbsent(connectionId, connectionHandler);
     }
 
     public HashMap<String, String> getUsers() {

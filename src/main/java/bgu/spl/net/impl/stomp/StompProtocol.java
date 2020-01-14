@@ -33,7 +33,8 @@ public class StompProtocol implements StompMessagingProtocol {
         } else if (message instanceof SubscribeFrame) {
             SubscribeFrame subscribeFrame = (SubscribeFrame) message;
             String topic = subscribeFrame.getDestination();
-            topics.add(topic);
+            if(!topics.contains(topic))
+                topics.add(topic);
             connections.getTopicList().putIfAbsent(subscribeFrame.getDestination(), new LinkedList<>());
             connections.getTopicList().get(subscribeFrame.getDestination()).add(new Pair<Integer, Integer>(connectionId, subscribeFrame.getId()));
             connections.getTopicsBySubscriptionsId().putIfAbsent(subscribeFrame.getId(),topic);
@@ -57,9 +58,7 @@ public class StompProtocol implements StompMessagingProtocol {
             connections.send(connectionId, new ReceiptFrame(subscriptionId));
         }
         else if (message instanceof SendFrame) {
-            System.out.println("instance of send");
             SendFrame sendFrame = (SendFrame) message;
-            System.out.println("body is:  " + sendFrame.getBody());
             int msgId = connections.getMessageId();
             String dest = sendFrame.getDestination();
             String body = sendFrame.getBody();
