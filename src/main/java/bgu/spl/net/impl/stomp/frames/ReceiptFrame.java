@@ -9,6 +9,8 @@ public class ReceiptFrame implements Frame {
 
     @Override
     public String toString(){
-        return "RECEIPT\n" + "receipt-id:" + id +'\n' + '\u0000';
+        return "RECEIPT\n"
+                + "receipt-id:" + id +
+                "\n" + '\u0000';
     }
 }

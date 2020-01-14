@@ -16,7 +16,7 @@ public class ConnectionsImp<T> implements Connections<T> {
     private ConcurrentHashMap<String, Boolean> loggedUsers;
     private HashMap<String, LinkedList<Pair<Integer, Integer>>> topicList;
     private HashMap<Integer, String> topicsBySubscriptionsId;
-    private AtomicInteger messageId = new AtomicInteger(0);
+    private AtomicInteger messageId = new AtomicInteger(1);
 
 
     public ConnectionsImp() {

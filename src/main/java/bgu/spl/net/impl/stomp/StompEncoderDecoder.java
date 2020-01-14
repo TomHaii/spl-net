@@ -54,6 +54,7 @@ public class StompEncoderDecoder implements MessageEncoderDecoder<Frame> {
                 message.clear();
                 return unsubscribeFrame;
             default:
+                message.clear();
                 System.out.println("Invalid Stomp Command");
                 return null;
         }

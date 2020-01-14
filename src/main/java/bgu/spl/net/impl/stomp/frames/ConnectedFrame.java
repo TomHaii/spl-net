@@ -10,6 +10,8 @@ public class ConnectedFrame implements Frame {
 
     @Override
     public String toString(){
-        return "CONNECTED\n" + "version:" + version + "\n" + '\u0000';
+        return "CONNECTED\n" +
+                "version:" + version +
+                "\n" + '\u0000';
     }
 }

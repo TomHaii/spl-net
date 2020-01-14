@@ -6,6 +6,7 @@ public class StompServer {
     public static void main(String[] args) {
         switch (args[1]){
             case "tpc":
+                System.out.println("starting tpc server");
                 Server.threadPerClient(Integer.parseInt(args[0]), StompProtocol::new, StompEncoderDecoder::new).serve();
                 break;
             case "reactor":
@@ -14,7 +15,5 @@ public class StompServer {
 //                        Integer.parseInt(args[0]), StompProtocol::new, StompEncoderDecoder::new).serve();
                 break;
         }
-
-
     }
 }

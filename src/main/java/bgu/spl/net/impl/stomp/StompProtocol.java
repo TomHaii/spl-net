@@ -59,6 +59,7 @@ public class StompProtocol implements StompMessagingProtocol {
         else if (message instanceof SendFrame) {
             System.out.println("instance of send");
             SendFrame sendFrame = (SendFrame) message;
+            System.out.println("body is:  " + sendFrame.getBody());
             int msgId = connections.getMessageId();
             String dest = sendFrame.getDestination();
             String body = sendFrame.getBody();
