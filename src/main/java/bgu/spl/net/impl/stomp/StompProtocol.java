@@ -53,7 +53,9 @@ public class StompProtocol implements StompMessagingProtocol {
             UnsubscribeFrame unsubscribeFrame = (UnsubscribeFrame) message;
             int subscriptionId = unsubscribeFrame.getId();
             String topic = connections.getTopicsBySubscriptionsId().get(subscriptionId);
+            System.out.println(currentUser + " wants to unsubscribe from " + topic + " the subscription id is " + subscriptionId);
             connections.getTopicList().get(topic).removeIf(pair -> pair.getKey() == connectionId);
+
             topics.remove(topic);
             connections.send(connectionId, new ReceiptFrame(subscriptionId));
         }
