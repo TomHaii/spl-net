@@ -39,7 +39,9 @@ public class StompProtocol implements StompMessagingProtocol {
             connections.getTopicList().get(subscribeFrame.getDestination()).add(new Pair<Integer, Integer>(connectionId, subscribeFrame.getId()));
             connections.getTopicsBySubscriptionsId().putIfAbsent(subscribeFrame.getId(),topic);
             connections.send(connectionId, new ReceiptFrame(subscribeFrame.getReceipt()));
+            System.out.println("User " +currentUser +" has subscribed to topic " + topic);
         } else if (message instanceof DisconnectFrame) {
+            System.out.println("User " +currentUser +" is trying to logout");
             DisconnectFrame disconnectFrame = (DisconnectFrame) message;
             for (String topic : topics) {
                 connections.getTopicList().get(topic).removeIf(pair -> pair.getKey() == connectionId);
@@ -47,17 +49,19 @@ public class StompProtocol implements StompMessagingProtocol {
             connections.send(connectionId, new ReceiptFrame(disconnectFrame.getReceipt()));
             connections.disconnect(connectionId);
             connections.getLoggedUsers().replace(currentUser, false);
+            System.out.println("User " +currentUser +" has logged out successfully");
             terminate = true;
+
         }
         else if (message instanceof UnsubscribeFrame) {
             UnsubscribeFrame unsubscribeFrame = (UnsubscribeFrame) message;
             int subscriptionId = unsubscribeFrame.getId();
             String topic = connections.getTopicsBySubscriptionsId().get(subscriptionId);
-            System.out.println(currentUser + " wants to unsubscribe from " + topic + " the subscription id is " + subscriptionId);
             connections.getTopicList().get(topic).removeIf(pair -> pair.getKey() == connectionId);
-
             topics.remove(topic);
             connections.send(connectionId, new ReceiptFrame(subscriptionId));
+            System.out.println("User "+currentUser + " has unsubscribed from topic" + topic);
+
         }
         else if (message instanceof SendFrame) {
             SendFrame sendFrame = (SendFrame) message;
@@ -66,6 +70,8 @@ public class StompProtocol implements StompMessagingProtocol {
             String body = sendFrame.getBody();
             connections.send(dest, new MessageFrame(msgId, dest, body));
             connections.incMessageId();
+            System.out.println(currentUser + " has sent a message");
+
         }
     }
 
@@ -74,9 +80,9 @@ public class StompProtocol implements StompMessagingProtocol {
         HashMap<String, String> users = connections.getUsers();
         ConcurrentHashMap<String, Boolean> loggedUsers = connections.getLoggedUsers();
         users.putIfAbsent(userName, password);
-        System.out.println("user " + userName + " is trying to login");
+        System.out.println("User " + userName + " is trying to login");
         loggedUsers.putIfAbsent(userName, false);
-        if(userName != null)
+        if(!userName.isEmpty())
             currentUser = userName;
         if(connections.getLoggedUsers().get(userName))
             connections.send(connectionId, new ErrorFrame(connectionId, "User is already logged in"));
@@ -85,6 +91,8 @@ public class StompProtocol implements StompMessagingProtocol {
         else{
             loggedUsers.replace(userName, true);
             connections.send(connectionId, new ConnectedFrame(version));
+            System.out.println("User " + userName + " has logged in successfully");
+
         }
 
     }

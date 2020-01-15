@@ -58,7 +58,6 @@ public class BlockingConnectionHandler implements Runnable, ConnectionHandler<Fr
     @Override
     public void send(Frame msg) {
         if(msg != null) {
-            System.out.println("I AM SENDING  " + msg.toString());
             byte[] bytesMsg = encdec.encode(msg);
             try {
                 out.write(bytesMsg);

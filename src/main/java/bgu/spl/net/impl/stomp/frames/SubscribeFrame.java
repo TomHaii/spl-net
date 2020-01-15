@@ -8,7 +8,6 @@ public class SubscribeFrame implements Frame {
     private int receipt;
 
     public SubscribeFrame(LinkedList<String> message) {
-        System.out.println("SUBSCRIBE Constructor!!\n "+ message);
         for(String msg: message){
             if(msg.contains("destination"))
                 destination = msg.split(":")[1];

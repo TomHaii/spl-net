@@ -43,7 +43,6 @@ public class ConnectionsImp<T> implements Connections<T> {
         int i = 0;
         if (topicList.get(channel) != null) {
             for (Pair<Integer, Integer> pair : topicList.get(channel)) {
-                System.out.println(i++ + " the msg is " + msg.toString() + "\n the connectionid is " + pair.getKey());
                 int connectionId = pair.getKey();
                 int subscriberId = pair.getValue();
                 ((MessageFrame)msg).setSubscription(subscriberId);

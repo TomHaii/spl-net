@@ -31,7 +31,6 @@ public class StompEncoderDecoder implements MessageEncoderDecoder<Frame> {
 
     private Frame buildFrame() {
         String firstWord = message.getFirst();
-        System.out.println(firstWord);
         switch (firstWord) {
             case "CONNECT":
                 ConnectFrame connectFrame = new ConnectFrame(message);
