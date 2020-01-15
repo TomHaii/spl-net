@@ -46,9 +46,9 @@ public class StompProtocol implements StompMessagingProtocol {
         } else if (message instanceof DisconnectFrame) {
             System.out.println("User " +currentUser +" is trying to logout");
             DisconnectFrame disconnectFrame = (DisconnectFrame) message;
-            for (String topic : topics) {
-                connections.getTopicList().get(topic).removeIf(pair -> pair.getKey() == connectionId);
-            }
+//            for (String topic : topics) {
+//                connections.getTopicList().get(topic).removeIf(pair -> pair.getKey() == connectionId);
+//            }
             connections.send(connectionId, new ReceiptFrame(disconnectFrame.getReceipt()));
             connections.disconnect(connectionId);
             connections.getLoggedUsers().replace(currentUser, false);

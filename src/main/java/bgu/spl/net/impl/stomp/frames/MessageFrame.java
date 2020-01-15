@@ -9,6 +9,8 @@ public class MessageFrame implements Frame {
     public MessageFrame(int messageID, String destination, String body) {
         this.messageID = messageID;
         this.destination = destination;
+        if (body.startsWith("\n"))
+            body = body.substring(1);
         this.body = body;
     }
 
@@ -18,7 +20,7 @@ public class MessageFrame implements Frame {
                 "subscription:" + subscription + "\n"+
                 "Message-id:" + messageID + "\n"+
                 "destination:" + destination + "\n\n"+
-                body +
+                body+
                 '\n' + '\u0000';
     }
 

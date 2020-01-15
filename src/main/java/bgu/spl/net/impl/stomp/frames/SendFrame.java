@@ -10,7 +10,7 @@ public class SendFrame implements Frame {
         for(String msg: message){
             if(msg.contains("destination"))
                 destination = msg.split(":")[1];
-            else if(!msg.equals("^@") && !msg.equals("\n") && !msg.equals("SEND")){
+            else if(!msg.equals("\u0000") && !msg.equals("\n") && !msg.equals("SEND")){
                 body = body + msg;
             }
         }
