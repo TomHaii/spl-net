@@ -10,9 +10,10 @@ public class StompServer {
                 Server.threadPerClient(Integer.parseInt(args[0]), StompProtocol::new, StompEncoderDecoder::new).serve();
                 break;
             case "reactor":
-//                Server.reactor(
-//                        Runtime.getRuntime().availableProcessors(),
-//                        Integer.parseInt(args[0]), StompProtocol::new, StompEncoderDecoder::new).serve();
+                System.out.println("Starting reactor server");
+                Server.reactor(
+                        Runtime.getRuntime().availableProcessors(),
+                        Integer.parseInt(args[0]), StompProtocol::new, StompEncoderDecoder::new).serve();
                 break;
         }
     }

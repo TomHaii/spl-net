@@ -5,6 +5,7 @@ import bgu.spl.net.impl.stomp.frames.Frame;
 import bgu.spl.net.impl.stomp.StompEncoderDecoder;
 import bgu.spl.net.impl.stomp.StompProtocol;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -45,6 +46,7 @@ public class BaseServer<T> implements Server<T> {
                         protocolFactory.get(), connectionsNum.get(), connections);
                 connections.connect(connectionsNum.getAndIncrement(), handler);
                 execute(handler);
+                System.out.println("made new thread");
             }
         } catch (IOException ex) {
         }

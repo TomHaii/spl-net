@@ -15,6 +15,7 @@ public class StompProtocol implements StompMessagingProtocol {
     private String currentUser;
     private ConnectionsImp<Frame> connections;
     private LinkedList<String> topics;
+    private HashMap<Integer, String> topicsBySubscriptionsId;
 
     @Override
     public void start(int connectionId, Connections<Frame> connections) {
@@ -22,6 +23,8 @@ public class StompProtocol implements StompMessagingProtocol {
         this.connections = (ConnectionsImp<Frame>) connections;
         terminate = false;
         topics = new LinkedList<>();
+        topicsBySubscriptionsId = new HashMap<>();
+
     }
 
 
@@ -37,7 +40,7 @@ public class StompProtocol implements StompMessagingProtocol {
                 topics.add(topic);
             connections.getTopicList().putIfAbsent(subscribeFrame.getDestination(), new LinkedList<>());
             connections.getTopicList().get(subscribeFrame.getDestination()).add(new Pair<Integer, Integer>(connectionId, subscribeFrame.getId()));
-            connections.getTopicsBySubscriptionsId().putIfAbsent(subscribeFrame.getId(),topic);
+            topicsBySubscriptionsId.putIfAbsent(subscribeFrame.getId(),topic);
             connections.send(connectionId, new ReceiptFrame(subscribeFrame.getReceipt()));
             System.out.println("User " +currentUser +" has subscribed to topic " + topic);
         } else if (message instanceof DisconnectFrame) {
@@ -56,7 +59,7 @@ public class StompProtocol implements StompMessagingProtocol {
         else if (message instanceof UnsubscribeFrame) {
             UnsubscribeFrame unsubscribeFrame = (UnsubscribeFrame) message;
             int subscriptionId = unsubscribeFrame.getId();
-            String topic = connections.getTopicsBySubscriptionsId().get(subscriptionId);
+            String topic = topicsBySubscriptionsId.get(subscriptionId);
             connections.getTopicList().get(topic).removeIf(pair -> pair.getKey() == connectionId);
             topics.remove(topic);
             connections.send(connectionId, new ReceiptFrame(subscriptionId));
@@ -70,7 +73,7 @@ public class StompProtocol implements StompMessagingProtocol {
             String body = sendFrame.getBody();
             connections.send(dest, new MessageFrame(msgId, dest, body));
             connections.incMessageId();
-            System.out.println(currentUser + " has sent a message");
+            System.out.println(currentUser + " has sent a message: " + body.substring(1, body.length() -2));
 
         }
     }
