@@ -17,7 +17,7 @@ public class MessageFrame implements Frame {
         return "MESSAGE\n" +
                 "subscription:" + subscription + "\n"+
                 "Message-id:" + messageID + "\n"+
-                "destination:" + destination + "\n"+
+                "destination:" + destination + "\n\n"+
                 body +
                 "\n" + '\u0000';
     }
