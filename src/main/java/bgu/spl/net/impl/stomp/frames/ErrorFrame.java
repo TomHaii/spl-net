@@ -14,6 +14,6 @@ public class ErrorFrame implements Frame {
         return "ERROR\n" +
                 "receipt-id:" + receiptId + '\n'+
                 "message:" + message +
-                '\n' + '\u0000';
+                "\n\n" + '\u0000';
     }
 }

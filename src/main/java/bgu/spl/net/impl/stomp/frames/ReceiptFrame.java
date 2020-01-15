@@ -11,6 +11,6 @@ public class ReceiptFrame implements Frame {
     public String toString(){
         return "RECEIPT\n"
                 + "receipt-id:" + id +
-                '\n' + '\u0000';
+                "\n\n" + '\u0000';
     }
 }
