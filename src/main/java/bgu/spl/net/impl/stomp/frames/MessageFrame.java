@@ -19,7 +19,7 @@ public class MessageFrame implements Frame {
                 "Message-id:" + messageID + "\n"+
                 "destination:" + destination + "\n\n"+
                 body +
-                "\n" + '\u0000';
+                '\n' + '\u0000';
     }
 
     public void setSubscription(int subscription) {

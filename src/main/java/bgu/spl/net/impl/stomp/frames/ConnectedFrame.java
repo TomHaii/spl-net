@@ -12,6 +12,6 @@ public class ConnectedFrame implements Frame {
     public String toString(){
         return "CONNECTED\n" +
                 "version:" + version +
-                "\n" + '\u0000';
+                '\n' + '\u0000';
     }
 }
