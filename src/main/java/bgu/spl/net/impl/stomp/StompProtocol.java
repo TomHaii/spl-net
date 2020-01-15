@@ -73,7 +73,7 @@ public class StompProtocol implements StompMessagingProtocol {
             String body = sendFrame.getBody();
             connections.send(dest, new MessageFrame(msgId, dest, body));
             connections.incMessageId();
-            System.out.println(currentUser + " has sent a message: " + body.substring(0, body.length() -2));
+            System.out.println(currentUser + " has sent a message: " + body);
 
         }
     }
