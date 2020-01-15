@@ -46,7 +46,6 @@ public class BaseServer<T> implements Server<T> {
                         protocolFactory.get(), connectionsNum.get(), connections);
                 connections.connect(connectionsNum.getAndIncrement(), handler);
                 execute(handler);
-                System.out.println("made new thread");
             }
         } catch (IOException ex) {
         }

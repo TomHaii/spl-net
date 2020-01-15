@@ -26,7 +26,6 @@ public class Reactor<T> implements Server<T> {
     private final Supplier<StompEncoderDecoder> readerFactory;
     private final ActorThreadPool pool;
     private Selector selector;
-
     private Thread selectorThread;
     private final ConcurrentLinkedQueue<Runnable> selectorTasks = new ConcurrentLinkedQueue<>();
     private ConnectionsImp<Frame> connections;
@@ -113,8 +112,6 @@ public class Reactor<T> implements Server<T> {
                 this, connectionsNum.get(), connections);
         connections.connect(connectionsNum.getAndIncrement(), handler);
         clientChan.register(selector, SelectionKey.OP_READ, handler);
-        System.out.println("made new thread on reactor");
-
     }
 
     private void handleReadWrite(SelectionKey key) {
