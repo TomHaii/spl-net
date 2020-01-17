@@ -72,7 +72,7 @@ public class StompProtocol implements StompMessagingProtocol {
                 System.out.println("User " + currentUser + " has unsubscribed from topic " + topic);
             }
             else{
-                System.out.println("User " +currentUser +" is trying to topic he is not subscribed to");
+                System.out.println("User " +currentUser +" is trying to subscribe to a topic he is not subscribed to");
             }
         }
         else if (message instanceof SendFrame) {
